@@ -1,0 +1,76 @@
+.relatorio-header {
+    background-color: #17571e;
+
+    padding: 20px;
+
+    display: flex;
+    text-align: center;
+
+}
+
+.senhas-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+    grid-gap: 20px;
+    padding: 20px;
+}
+
+.relatorio-header ion-title {
+    font-weight: 600;
+}
+
+.button {
+    --background: #17571e;
+
+    border-radius: 5px;
+}
+
+.background>section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.senhas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.senha {
+    --background: #15bf1e;
+    color: #fff;
+
+    width: max-content;
+
+    border-radius: 10px;
+}
+
+.senha ion-card-content,
+.dado,
+.tempo-medio{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    columns: 1;
+}
+
+.senha ion-title,
+.senha p {
+    font-weight: 600;
+    margin: 0px;
+}
+
+.dados {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    gap: 25px;
+}

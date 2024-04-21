@@ -1,0 +1,23 @@
+.header {
+    background-color: #3F618C;
+    color: #fff;
+
+    margin: 0px;
+    padding: 0px;
+
+    height: 90px;
+
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.header>ion-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.background {
+    --ion-background-color: #F1F6FF;
+  }
+  
