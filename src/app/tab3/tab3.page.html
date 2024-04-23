@@ -17,26 +17,31 @@
     <ion-card-content>
       <ion-list>
         <ion-item>
-        <ion-label>Total de Senhas: {{senhaService.listaSenhas.NT}}</ion-label>
+        <ion-label>Total de Senhas: {{ticketService.ticketList.NT}}</ion-label>
       </ion-item>
         <ion-item>
-          <ion-label>Senha Geral: {{senhaService.listaSenhas.NSG}}</ion-label>
+          <ion-label>Senha Geral: {{ticketService.ticketList.NSG}}</ion-label>
         </ion-item>
         <ion-item>
-          <ion-label>Senha Prioritária: {{senhaService.listaSenhas.NSP}}</ion-label>
+          <ion-label>Senha Prioritária: {{ticketService.ticketList.NSP}}</ion-label>
         </ion-item>
         <ion-item>
-          <ion-label> Senha de Exame: {{senhaService.listaSenhas.NSE}}</ion-label>
+          <ion-label> Senha de Exame: {{ticketService.ticketList.NSE}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label> Senhas atendidas: {{ticketService.ticketList.FTN}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label> Tempo médio de Espera/Atendimento: {{ticketService.ticketList.ATF}} Min</ion-label>
         </ion-item>
       </ion-list>
     </ion-card-content>
   </ion-card>
   <ion-card>
     <ion-card-content>
-      <ion-button expand="block" (click)="senhaService.newDay()">Iniciar novo dia</ion-button>
+      <ion-button expand="block" (click)="ticketService.newDay()">Iniciar novo dia</ion-button>
     </ion-card-content>
   </ion-card>
-
   <ion-card>
     <ion-card-content>
       <ion-list>
@@ -48,5 +53,4 @@
       </ion-list>
     </ion-card-content>
   </ion-card>
-  
 </ion-content>

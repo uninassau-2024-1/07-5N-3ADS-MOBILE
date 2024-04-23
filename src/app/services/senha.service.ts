@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
 
-type Senha = {
+type Ticket = {
   'icon': String,
   'color': String,
-  'numero': String,
-  'gm_timestamp': String,
-  'fn_timestamp'?: String,
-  'atendido'?: boolean
+  'number': String,
+  'gen_timestamp': String,
+  'fin_timestamp'?: String,
+  'finished'?: boolean
 }
 
-type ListaSenhas = {
-  'SG': Senha[],
+type ListaTickets = {
+  'SG': Ticket[],
   'NSG': number
-  'SE': Senha[],
+  'SE': Ticket[],
   'NSE': number
-  'SP': Senha[],
+  'SP': Ticket[],
   'NSP': number,
   'NT': number,
-  'SC'?: Senha
+  'SC'?: Ticket,
+  'FTN': number,
+  'ATF': String
 }
 
 
@@ -26,11 +28,11 @@ type ListaSenhas = {
   providedIn: 'root'
 })
 
-export class SenhaService {
-  
-  public senhasAtendidas: Senha[] = []
-  public ultimas5Atendidas: Senha[] = []
-  public listaSenhas: ListaSenhas = {
+export class TicketService {
+
+  private finishedTickets: Ticket[] = []
+  public last5ConcludedTickets: Ticket[] = []
+  public ticketList: ListaTickets = {
     'SG': [],
     'NSG': 0,
     'SE': [],
@@ -38,178 +40,201 @@ export class SenhaService {
     'SP': [],
     'NSP': 0,
     'NT': 0,
+    'FTN': 0,
+    'ATF': "0"
   }
- 
 
-  public newDay(){
+
+  public newDay() {
     localStorage.clear()
     location.reload()
   }
 
-  public gerarSenha(tipoSenha: String = ''){
-    var data = new Date()
+  public generateTicket(typeTicket: String = '') {
+    var date = new Date()
 
-    if(tipoSenha == 'SG'){
-      this.listaSenhas.NSG++
-      this.listaSenhas.NT++
-      var senha: Senha = {
+    if (typeTicket == 'SG') {
+      this.ticketList.NSG++
+      this.ticketList.NT++
+      var ticket: Ticket = {
         'icon': 'person',
         'color': 'primary',
-        'numero': `${this.getformatDate(data)}-SG${this.formatNumber(this.listaSenhas.NSG)}`,
-        'gm_timestamp': `${this.getTimeStamp(data)}`
+        'number': `${this.getFormattedDate(date)}-SG${this.formatNumber(this.ticketList.NSG)}`,
+        'gen_timestamp': `${this.getInitialTimeStamp(date)}`
       }
-      this.listaSenhas.SC = senha
-      this.listaSenhas.SG.push(senha)
-      this.saveProgress(this.listaSenhas.SG, "SG")
-      this.saveProgressNumber(this.listaSenhas.NSG, "NSG")
+      this.ticketList.SC = ticket
+      this.ticketList.SG.push(ticket)
+      this.saveProgress(this.ticketList.SG, "SG")
+      this.saveProgressNumber(this.ticketList.NSG, "NSG")
     }
 
-    if(tipoSenha == 'SP'){
-      this.listaSenhas.NSP++
-      this.listaSenhas.NT++
-      var senha: Senha = {
+    if (typeTicket == 'SP') {
+      this.ticketList.NSP++
+      this.ticketList.NT++
+      var ticket: Ticket = {
         'icon': 'bandage',
         'color': 'success',
-        'numero': `${this.getformatDate(data)}-SP${this.formatNumber(this.listaSenhas.NSP)}`,
-        'gm_timestamp': `${this.getTimeStamp(data)}`
+        'number': `${this.getFormattedDate(date)}-SP${this.formatNumber(this.ticketList.NSP)}`,
+        'gen_timestamp': `${this.getInitialTimeStamp(date)}`
       }
-      this.listaSenhas.SC = senha
-      this.listaSenhas.SP.push(senha)
-      this.saveProgress(this.listaSenhas.SP, "SP")
-      this.saveProgressNumber(this.listaSenhas.NSP, "NSP")
+      this.ticketList.SC = ticket
+      this.ticketList.SP.push(ticket)
+      this.saveProgress(this.ticketList.SP, "SP")
+      this.saveProgressNumber(this.ticketList.NSP, "NSP")
     }
 
-    if(tipoSenha =='SE'){
-      this.listaSenhas.NSE++
-      this.listaSenhas.NT++
-      var senha: Senha = {
+    if (typeTicket == 'SE') {
+      this.ticketList.NSE++
+      this.ticketList.NT++
+      var ticket: Ticket = {
         'icon': 'document',
         'color': 'warning',
-        'numero': `${this.getformatDate(data)}-SE${this.formatNumber(this.listaSenhas.NSE)}`,
-        'gm_timestamp': `${this.getTimeStamp(data)}`
+        'number': `${this.getFormattedDate(date)}-SE${this.formatNumber(this.ticketList.NSE)}`,
+        'gen_timestamp': `${this.getInitialTimeStamp(date)}`
       }
-      this.listaSenhas.SC = senha
-      this.listaSenhas.SE.push(senha)
-      this.saveProgress(this.listaSenhas.SE, "SE")
-      this.saveProgressNumber(this.listaSenhas.NSE, "NSE")
+      this.ticketList.SC = ticket
+      this.ticketList.SE.push(ticket)
+      this.saveProgress(this.ticketList.SE, "SE")
+      this.saveProgressNumber(this.ticketList.NSE, "NSE")
     }
-    this.saveProgressNumber(this.listaSenhas.NT, "NT")
+    this.saveProgressNumber(this.ticketList.NT, "NT")
   }
 
-  public formatNumber(n: number){
+  public formatNumber(n: number) {
     var formattedNumber = ''
-    if(n < 10){formattedNumber = '0'+ n.toString()}
-    else{formattedNumber = n.toString()}
+    if (n < 10) { formattedNumber = '0' + n.toString() }
+    else { formattedNumber = n.toString() }
     return formattedNumber
   }
 
-  public getformatDate(data: Date){
-    var reducedYear = data.getFullYear().toString().slice(2,4)
-    var month = data.getMonth() + 1
-    var day = data.getDate()
+  public callNextTicket() {
+    if (this.ticketList.SE.length > 0 && this.ticketList.SP.length < 1 && this.ticketList.SG.length < 1 || this.ticketList.SE.length > 0 && this.checkLastTicket("SP") || this.ticketList.SE.length > 0 && this.ticketList.SP.length < 1 && !this.finishedTickets[0]) {
+      var ticket = this.returnFirst(this.ticketList.SE)
+      ticket.finished = true
+      ticket = this.getFinalTimeStamp(ticket)
+      this.finishedTickets.push(ticket)
+      this.saveProgress(this.ticketList.SE, "SE")
+      this.saveProgress(this.finishedTickets, "SA")
+      this.ticketList.FTN++
+    }
+    else if ((this.ticketList.SE.length < 1 && this.ticketList.SG.length < 1 && this.ticketList.SP.length > 0) || this.ticketList.SP.length > 0 && (this.checkLastTicket("SG") || this.checkLastTicket("SE")) || this.ticketList.SP.length > 0 && !this.finishedTickets[0]) {
+      var ticket = this.returnFirst(this.ticketList.SP)
+      ticket.finished = true
+      ticket = this.getFinalTimeStamp(ticket)
+      this.finishedTickets.push(ticket)
+      this.saveProgress(this.ticketList.SP, "SP")
+      this.saveProgress(this.finishedTickets, "SA")
+      this.ticketList.FTN++
+    }
+    else if ((this.ticketList.SE.length < 1 && this.ticketList.SP.length < 1 && this.ticketList.SG.length > 0) || this.ticketList.SE.length < 1 && this.ticketList.SG.length > 0 && (this.checkLastTicket("SP")) || this.ticketList.SG.length > 0 && this.ticketList.SP.length < 1 && this.ticketList.SE.length < 1 && !this.finishedTickets[0]) {
+      var ticket = this.returnFirst(this.ticketList.SG)
+      ticket.finished = true
+      ticket = this.getFinalTimeStamp(ticket)
+      this.finishedTickets.push(ticket)
+      this.saveProgress(this.ticketList.SG, "SG")
+      this.saveProgress(this.finishedTickets, "SA")
+      this.ticketList.FTN++
+    }
+    if (this.finishedTickets.length > 0) {
+      this.getLast5Tickets()
+    }
+    this.saveProgressNumber(this.ticketList.FTN, "FTN")
+    this.getAvgTimeToFinish()
+
+  }
+
+  public getLast5Tickets() {
+    if (this.finishedTickets.length > 5) {
+      this.last5ConcludedTickets = this.finishedTickets.slice(this.finishedTickets.length - 5, this.finishedTickets.length)
+    }
+    else if (this.finishedTickets.length == 0) {
+      console.log("Array vazio!")
+    }
+    else if (this.finishedTickets.length < 5) {
+      this.last5ConcludedTickets = this.finishedTickets
+    }
+  }
+
+  public getFormattedDate(date: Date) {
+    var reducedYear = date.getFullYear().toString().slice(2, 4)
+    var month = date.getMonth() + 1
+    var day = date.getDate()
     return `${reducedYear}${this.formatNumber(month)}${this.formatNumber(day)}`
   }
 
-  public getTimeStamp(data: Date){
-    return data.getTime().toString()
-  }
-  
-  public callNextTicket(){
-    if(this.listaSenhas.SE.length > 0 && this.listaSenhas.SP.length < 1 && this.listaSenhas.SG.length < 1 || this.listaSenhas.SE.length > 0 && this.checkLastTicket("SP") || this.listaSenhas.SE.length > 0 && this.listaSenhas.SP.length < 1 && !this.senhasAtendidas[0]){
-      var senha = this.returnFirst(this.listaSenhas.SE)
-      senha.atendido = true
-      senha = this.getFinalTimeStamp(senha)
-      this.senhasAtendidas.push(senha)
-      this.saveProgress(this.listaSenhas.SE, "SE")
-      this.saveProgress(this.senhasAtendidas, "SA")
-    }
-    else if((this.listaSenhas.SE.length < 1 && this.listaSenhas.SG.length < 1 && this.listaSenhas.SP.length > 0 ) || this.listaSenhas.SP.length > 0 && (this.checkLastTicket("SG") || this.checkLastTicket("SE")) || this.listaSenhas.SP.length > 0 && !this.senhasAtendidas[0]){
-      var senha = this.returnFirst(this.listaSenhas.SP)
-      senha.atendido = true
-      senha = this.getFinalTimeStamp(senha)
-      this.senhasAtendidas.push(senha)
-      this.saveProgress(this.listaSenhas.SP, "SP")
-      this.saveProgress(this.senhasAtendidas, "SA")
-    }
-    else if((this.listaSenhas.SE.length < 1 && this.listaSenhas.SP.length < 1 && this.listaSenhas.SG.length > 0) || this.listaSenhas.SE.length < 1 && this.listaSenhas.SG.length > 0 && (this.checkLastTicket("SP")) || this.listaSenhas.SG.length > 0 && this.listaSenhas.SP.length < 1 && this.listaSenhas.SE.length < 1 && !this.senhasAtendidas[0]){
-      var senha = this.returnFirst(this.listaSenhas.SG)
-      senha.atendido = true
-      senha = this.getFinalTimeStamp(senha)
-      this.senhasAtendidas.push(senha)
-      this.saveProgress(this.listaSenhas.SG, "SG")
-      this.saveProgress(this.senhasAtendidas, "SA")
-    }
-    if(this.senhasAtendidas.length > 0){
-      this.getLast5Tickets()
-    }
+  public getInitialTimeStamp(date: Date) {
+    return date.getTime().toString()
   }
 
-  public getLast5Tickets(){
-    if(this.senhasAtendidas.length > 5){
-      this.ultimas5Atendidas = this.senhasAtendidas.slice(this.senhasAtendidas.length - 5, this.senhasAtendidas.length)
-    }
-    else if(this.senhasAtendidas.length == 0){
-      console.log("Array vazio!")
-    }
-    else if(this.senhasAtendidas.length < 5){
-      this.ultimas5Atendidas = this.senhasAtendidas
-    }
-  }
-  
-  public returnFirst(array: Senha[]){
+  public returnFirst(array: Ticket[]) {
     var result
-    if(array.length > 0){
-    result = array.shift()
+    if (array.length > 0) {
+      result = array.shift()
     }
-    
-    if(result == undefined){ throw new Error("Not Found")}
-    else{
-    return result
+    if (result == undefined) { throw new Error("Not Found") }
+    else {
+      return result
     }
   }
 
-  public checkLastTicket(type: string){
-    var senhasAtendidasLastPosition = this.senhasAtendidas.length - 1
-    var lastIteration = this.senhasAtendidas[senhasAtendidasLastPosition]
-    if(!lastIteration){
+  public checkLastTicket(type: string) {
+    var finishedTicketsLastPosition = this.finishedTickets.length - 1
+    var lastIteration = this.finishedTickets[finishedTicketsLastPosition]
+    if (!lastIteration) {
       return false
     }
-    else if(lastIteration.numero.includes(type)){
+    else if (lastIteration.number.includes(type)) {
       return true
     }
-    else{
+    else {
       return false
     }
   }
 
-  public getFinalTimeStamp(senha: Senha){
-    var data = new Date()
-    var timestamp = data.getTime().toString()
-    senha.fn_timestamp = timestamp
-    return senha
+  public getFinalTimeStamp(ticket: Ticket) {
+    var date = new Date()
+    var timestamp = date.getTime().toString()
+    ticket.fin_timestamp = timestamp
+    return ticket
   }
 
-  public saveProgress(array: Senha[], str: string){
+  public saveProgress(array: Ticket[], str: string) {
     localStorage.removeItem(str)
     localStorage.setItem(str, JSON.stringify(array))
   }
 
-  public saveProgressNumber(n: number, str: string){
+  public saveProgressNumber(n: number, str: string) {
     localStorage.removeItem(str)
     localStorage.setItem(str, JSON.stringify(n))
   }
 
-  public loadProgress(){
-    if(localStorage.getItem("SG") || localStorage.getItem("SP") || localStorage.getItem("SE") || localStorage.getItem("SA")){
-      this.listaSenhas.SG = JSON.parse(localStorage.getItem("SG") || "[]")
-      this.listaSenhas.SP = JSON.parse(localStorage.getItem("SP") || "[]")
-      this.listaSenhas.SE = JSON.parse(localStorage.getItem("SE") || "[]")
-      this.listaSenhas.NSG = JSON.parse(localStorage.getItem("NSG") || "0")
-      this.listaSenhas.NSP = JSON.parse(localStorage.getItem("NSP") || "0")
-      this.listaSenhas.NSE = JSON.parse(localStorage.getItem("NSE") || "0")
-      this.listaSenhas.NT = JSON.parse(localStorage.getItem("NT") || "0")
-      this.senhasAtendidas = JSON.parse(localStorage.getItem("SA") || "[]")
+  public getAvgTimeToFinish() {
+    var avg = 0
+    var result = ''
+    if (this.finishedTickets.length > 0) {
+      for (var ticket of this.finishedTickets) {
+        avg += (Number(ticket.fin_timestamp) - Number(ticket.gen_timestamp)) / 1000
+      }
+      avg = (avg / 60) % 60
+      avg = avg / this.finishedTickets.length
+
+      result = `${Math.round(avg)}`
+      this.ticketList.ATF = result
+
     }
   }
-  constructor() { this.loadProgress()}
+  public loadProgress() {
+    if (localStorage.getItem("SG") || localStorage.getItem("SP") || localStorage.getItem("SE") || localStorage.getItem("SA")) {
+      this.ticketList.SG = JSON.parse(localStorage.getItem("SG") || "[]")
+      this.ticketList.SP = JSON.parse(localStorage.getItem("SP") || "[]")
+      this.ticketList.SE = JSON.parse(localStorage.getItem("SE") || "[]")
+      this.ticketList.NSG = JSON.parse(localStorage.getItem("NSG") || "0")
+      this.ticketList.NSP = JSON.parse(localStorage.getItem("NSP") || "0")
+      this.ticketList.NSE = JSON.parse(localStorage.getItem("NSE") || "0")
+      this.ticketList.NT = JSON.parse(localStorage.getItem("NT") || "0")
+      this.ticketList.FTN = JSON.parse(localStorage.getItem("FTN") || "0")
+      this.finishedTickets = JSON.parse(localStorage.getItem("SA") || "[]")
+    }
+  }
+  constructor() { this.loadProgress() }
 }

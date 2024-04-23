@@ -14,16 +14,16 @@
   </ion-header>
     <ion-card>
       <ion-card-content>
-      <ion-card-title>Clique para gerar nova Senha: </ion-card-title>
-      <ion-button expand="block" (click)="senhaService.gerarSenha('SG')">Senha Geral</ion-button>
-      <ion-button expand="block" color="success" (click)="senhaService.gerarSenha('SP')">Senha Prioritária</ion-button>
-      <ion-button expand="block" color="warning" (click)="senhaService.gerarSenha('SE')">Senha Exame</ion-button>
+      <ion-card-title>Clique para gerar nova Senha:</ion-card-title>
+      <ion-button expand="block" (click)="ticketService.generateTicket('SG')">Senha Geral</ion-button>
+      <ion-button expand="block" color="success" (click)="ticketService.generateTicket('SP')">Senha Prioritária</ion-button>
+      <ion-button expand="block" color="warning" (click)="ticketService.generateTicket('SE')">Senha Exame</ion-button>
     </ion-card-content>
     </ion-card>
-    <ion-card *ngIf="senhaService.listaSenhas.SC">
+    <ion-card *ngIf="ticketService.ticketList.SC">
       <ion-card-content>
         <ion-card-title>Sua senha é: </ion-card-title>
-        <ion-label color="senhaService.listaSenhas.SC.color">{{senhaService.listaSenhas.SC.numero}}</ion-label>
+        <ion-label color={{ticketService.ticketList.SC.color}}>{{ticketService.ticketList.SC.number}}</ion-label>
       </ion-card-content>
     </ion-card>
 </ion-content>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonCard, IonCardContent, IonCardHeader, IonList, IonItem, IonButton, IonIcon, IonLabel } from '@ionic/angular';
-import { SenhaService } from '../services/senha.service';
+import { TicketService } from '../services/senha.service';
 
 @Component({
   selector: 'app-tab1',
@@ -9,7 +9,7 @@ import { SenhaService } from '../services/senha.service';
 })
 export class Tab1Page {
 
-  constructor(public senhaService: SenhaService) {}
+  constructor(public ticketService: TicketService) {}
 
  
 }
