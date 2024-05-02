@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Senhas
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Senhas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+    <ion-card>
+      <ion-card-content>
+      <ion-card-title>Clique para gerar nova Senha:</ion-card-title>
+      <ion-button expand="block" (click)="ticketService.generateTicket('SG')">Senha Geral</ion-button>
+      <ion-button expand="block" color="success" (click)="ticketService.generateTicket('SP')">Senha Prioritária</ion-button>
+      <ion-button expand="block" color="warning" (click)="ticketService.generateTicket('SE')">Senha Exame</ion-button>
+    </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="ticketService.ticketList.SC">
+      <ion-card-content>
+        <ion-card-title>Sua senha é: </ion-card-title>
+        <ion-label color={{ticketService.ticketList.SC.color}}>{{ticketService.ticketList.SC.number}}</ion-label>
+      </ion-card-content>
+    </ion-card>
+</ion-content>
