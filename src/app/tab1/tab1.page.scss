@@ -1,0 +1,120 @@
+.conteudo {
+  background-color: #F1F6FF;
+  color: #000;
+
+  margin: 0px;
+  padding: 10px;
+
+  height: 40%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.button {
+  width: 250px;
+  height: 50px;
+
+  font-weight: 600;
+}
+
+.button>img {
+  scale: 75%;
+}
+
+#prioritaria {
+  font-family: "helvetica";
+  --background: #DE1717;
+  border-radius: 5px;
+  border: none;
+}
+
+#exame {
+  font-family: "helvetica";
+  --background: #FB871D;
+  border-radius: 5px;
+  border: none;
+}
+
+#geral {
+  font-family: "helvetica";
+  --background: #24A90F;
+  border: none;
+  border-radius: 5px;
+}
+
+
+.chamadas {
+  background-color: #17571e;
+
+  color: #fff;
+
+  height: 45px;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.senhas-chamadas {
+  background-color: #17571e;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-de-senha {
+  --background: #15bf1e;
+  color: #fff;
+
+  width: 25%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.card-de-senha ion-card-content{
+  
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.SG{
+  background-color: #248b14;
+  height: 80px;
+  width: 20px;
+}
+
+.SE{
+  background-color: #FB871D;
+  height: 80px;
+  width: 20px;
+}
+
+.SP{
+  background-color: #DE1717;
+  height: 80px;
+  width: 20px;
+}
+
+.header{
+
+  background-color: #17571e;
+
+}
+.bandage{
+
+  margin-right: 15px;
+
+  font-size: 40px;
+
+}

@@ -1,0 +1,32 @@
+<ion-header class="relatorio-header">
+  <ion-button class="button" (click)="voltar()"><img src="../../assets/icon/seta.png" alt=""></ion-button>
+  <ion-title> RELATÓRIO DETALHADO</ion-title>
+</ion-header>
+
+<ion-content class="background senhas-container">
+
+  <section class="senhas">
+    <ion-card class="senha" *ngFor="let senha of senhasService.senhasAtendidas">
+      <ion-card-content>
+        <ion-title>Senha: {{senha.numero.slice(-2)}} - {{senha.tipo}}</ion-title>
+        <div class="dados">
+          <div class="dado">
+            <p>Emissão e Atendimento </p>
+            <p>{{senha.dataEmissao}} </p>
+            <p>{{senha.dataAtendimento}}</p>
+          </div>
+          <div class="dado">
+            <p>Responsavel</p>
+            <p>{{senha.guicheAtendimento}}</p>
+          </div>
+
+          <div class="tempo-medio">
+            <p>Tempo de Atendimento</p>
+            <p>{{senha.tempo}} minuto(s)</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+</ion-content>

@@ -1,0 +1,29 @@
+<ion-header class="header">
+  <ion-title>
+    SOLICITAR SENHA
+  </ion-title>
+</ion-header>
+
+<ion-content class="background">
+
+  <ion-segment class="conteudo">
+    <ion-button class="button" id="prioritaria" shape="round"  (click)="senhasService.novaSenha('SP')"> <ion-icon name="bandage-outline" class="bandage" ></ion-icon>   
+         Prioritária</ion-button>
+    <ion-button class="button" id="exame" shape="round" (click)="senhasService.novaSenha('SE')"> <img
+        src="../../assets/icon/Document.png"> Retirada de Exames</ion-button>
+    <ion-button class="button" id="geral" shape="round" (click)="senhasService.novaSenha('SG')"> <img
+        src="../../assets/icon/Ticket.png"> Geral</ion-button>
+  </ion-segment>
+
+  <ion-segment class="chamadas">
+    SENHAS CHAMADAS
+  </ion-segment>
+  <section class="senhas-chamadas">
+    <ion-card *ngFor="let senha of senhasService.senhasAtendidas" class="card-de-senha">
+      <div [class]="senha.tipo"> </div>
+      <ion-card-content>
+        {{senha.numero}}
+      </ion-card-content>
+    </ion-card>
+  </section>
+</ion-content>
