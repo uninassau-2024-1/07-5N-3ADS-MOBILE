@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Atendente
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Tab 2</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list *ngIf="ultimasSenhasChamadas.length > 0">
+    <ion-label>Últimas Senhas Chamadas</ion-label>
+    <ion-item *ngFor="let senha of ultimasSenhasChamadas">{{ senha }}</ion-item>
+  </ion-list>
+
+  <ion-button expand="block" (click)="chamarProximaSenha()">Chamar Próxima Senha</ion-button>
+  <ion-button expand="block" (click)="calcularTMPrioritaria()">Calcular TM Prioritária</ion-button>
+  <ion-button expand="block" (click)="calcularTMGeral()">Calcular TM Geral</ion-button>
+
+  <ion-card *ngIf="tmPrioritaria !== null">
+    <ion-card-content>
+      <ion-label>Tempo Médio Prioritário: {{ tmPrioritaria }} minutos</ion-label>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-card *ngIf="tmGeral !== null">
+    <ion-card-content>
+      <ion-label>Tempo Médio Geral: {{ tmGeral }} minutos</ion-label>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
